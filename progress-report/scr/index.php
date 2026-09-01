@@ -1,2 +1,44 @@
-<h1>Trang ch·ªß - L√†ng ngh·ªÅ truy·ªÅn th·ªëng Vi·ªát Nam</h1>
-<p>Giao di·ªán ng∆∞·ªùi d√πng s·∫Ω ƒë∆∞·ª£c thi·∫øt k·∫ø t·∫°i ƒë√¢y.</p>
+<?php include 'config.php'; ?>
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>L‡ng Ngh? Truy?n Th?ng Vi?t Nam</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 0; background-color: #f9f9f9; }
+        .header { background-color: #2c3e50; color: white; padding: 20px; text-align: center; }
+        .container { display: flex; flex-wrap: wrap; gap: 20px; padding: 20px; justify-content: center; }
+        .card { background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); width: 300px; }
+        .card h3 { color: #e74c3c; margin-top: 0; }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Kh·m Ph· L‡ng Ngh? Truy?n Th?ng Vi?t Nam</h1>
+        <p>GÏn gi? b?n s?c - TÙn vinh ngh? nh‚n</p>
+    </div>
+    
+    <div class="container">
+        <?php
+        // Truy v?n d? li?u l‡ng ngh? v‡ d?a phuong
+        $sql = "SELECT cv.name, cv.address, cv.history, l.name as location 
+                FROM craft_villages cv 
+                JOIN locations l ON cv.location_id = l.id";
+        $result = $conn->query($sql);
+
+        if ($result->num_rows > 0) {
+            while($row = $result->fetch_assoc()) {
+                echo "<div class='card'>";
+                echo "<h3>" . $row['name'] . "</h3>";
+                echo "<p><strong>–?a phuong:</strong> " . $row['location'] . "</p>";
+                echo "<p><strong>–?a ch?:</strong> " . $row['address'] . "</p>";
+                echo "</div>";
+            }
+        } else {
+            echo "<p>H? th?ng dang c?p nh?t d? li?u l‡ng ngh?...</p>";
+        }
+        ?>
+    </div>
+</body>
+</html>
