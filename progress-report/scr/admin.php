@@ -1,2 +1,88 @@
-<h1>Trang Qu·∫£n tr·ªã Admin</h1>
-<p>Ch·ª©c nƒÉng Th√™m/S·ª≠a/X√≥a L√†ng ngh·ªÅ.</p>
+<?php 
+include 'config.php'; 
+
+// 1. X? L› X”A D? LI?U
+if (isset($_GET['delete_id'])) {
+    $id = $_GET['delete_id'];
+    $sql_delete = "DELETE FROM craft_villages WHERE id = $id";
+    $conn->query($sql_delete);
+    header("Location: admin.php"); // T?i l?i trang sau khi xÛa
+}
+
+// 2. X? L› TH M D? LI?U M?I
+if (isset($_POST['btn_add'])) {
+    $name = $_POST['name'];
+    $address = $_POST['address'];
+    $history = $_POST['history'];
+    // M?c d?nh g·n location_id = 1 v‡ category_id = 1 d? don gi?n hÛa cho b?n demo
+    $sql_insert = "INSERT INTO craft_villages (name, location_id, category_id, address, history) 
+                   VALUES ('$name', 1, 1, '$address', '$history')";
+    $conn->query($sql_insert);
+    header("Location: admin.php");
+}
+?>
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <title>Qu?n tr? L‡ng Ngh?</title>
+    <style>
+        body { font-family: Arial, sans-serif; padding: 20px; background-color: #f4f4f9; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; background: white; }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: left; }
+        th { background-color: #2c3e50; color: white; }
+        .btn-delete { color: red; text-decoration: none; font-weight: bold; }
+        .form-add { background: white; padding: 15px; border-radius: 5px; margin-bottom: 20px; }
+        input[type="text"], textarea { width: 100%; padding: 8px; margin: 5px 0 15px; }
+        button { background-color: #27ae60; color: white; padding: 10px 15px; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h2>Trang Qu?n Tr? H? Th?ng L‡ng Ngh?</h2>
+    
+    <!-- Form ThÍm D? Li?u -->
+    <div class="form-add">
+        <h3>ThÍm L‡ng Ngh? M?i</h3>
+        <form method="POST" action="admin.php">
+            <label>TÍn L‡ng Ngh?:</label>
+            <input type="text" name="name" required>
+            
+            <label>–?a ch?:</label>
+            <input type="text" name="address" required>
+            
+            <label>L?ch s? hÏnh th‡nh:</label>
+            <textarea name="history" rows="3" required></textarea>
+            
+            <button type="submit" name="btn_add">ThÍm M?i</button>
+        </form>
+    </div>
+
+    <!-- B?ng Hi?n th? D? li?u -->
+    <table>
+        <tr>
+            <th>ID</th>
+            <th>TÍn L‡ng Ngh?</th>
+            <th>–?a Ch?</th>
+            <th>Thao t·c</th>
+        </tr>
+        <?php
+        $sql = "SELECT id, name, address FROM craft_villages ORDER BY id DESC";
+        $result = $conn->query($sql);
+        if ($result->num_rows > 0) {
+            while($row = $result->fetch_assoc()) {
+                echo "<tr>";
+                echo "<td>" . $row['id'] . "</td>";
+                echo "<td>" . $row['name'] . "</td>";
+                echo "<td>" . $row['address'] . "</td>";
+                // N˙t XÛa cÛ dÌnh kËm ID
+                echo "<td><a class='btn-delete' href='admin.php?delete_id=" . $row['id'] . "' onclick='return confirm(\"B?n cÛ ch?c ch?n mu?n xÛa?\")'>XÛa</a></td>";
+                echo "</tr>";
+            }
+        } else {
+            echo "<tr><td colspan='4'>Chua cÛ d? li?u</td></tr>";
+        }
+        ?>
+    </table>
+</body>
+</html>
