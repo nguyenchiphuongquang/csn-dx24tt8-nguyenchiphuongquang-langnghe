@@ -1,10 +1,10 @@
-<?php include 'config.php'; ?>
+﻿<?php include 'config.php'; ?>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>L�ng Ngh? Truy?n Th?ng Vi?t Nam</title>
+    <title>Làng Nghề Truyền Thống Việt Nam</title>
     <style>
         body { font-family: Arial, sans-serif; margin: 0; background-color: #f9f9f9; }
         .header { background-color: #2c3e50; color: white; padding: 20px; text-align: center; }
@@ -15,28 +15,30 @@
 </head>
 <body>
     <div class="header">
-        <h1>Kh�m Ph� L�ng Ngh? Truy?n Th?ng Vi?t Nam</h1>
-        <p>G�n gi? b?n s?c - T�n vinh ngh? nh�n</p>
+        <h1>Khám Phá Làng Nghề Truyền Thống Việt Nam</h1>
+        <p>Gìn giữ bản sắc - Tôn vinh nghệ nhân</p>
     </div>
     
     <div class="container">
         <?php
-        // Truy v?n d? li?u l�ng ngh? v� d?a phuong
+        // Truy vấn dữ liệu làng nghề và địa phương
         $sql = "SELECT cv.name, cv.address, cv.history, l.name as location 
                 FROM craft_villages cv 
                 JOIN locations l ON cv.location_id = l.id";
         $result = $conn->query($sql);
 
-        if ($result->num_rows > 0) {
+        if ($result === false) {
+            echo "<p style='color:red;'>Lỗi CSDL: " . $conn->error . "</p>";
+        } elseif ($result->num_rows > 0) {
             while($row = $result->fetch_assoc()) {
                 echo "<div class='card'>";
                 echo "<h3>" . $row['name'] . "</h3>";
-                echo "<p><strong>�?a phuong:</strong> " . $row['location'] . "</p>";
-                echo "<p><strong>�?a ch?:</strong> " . $row['address'] . "</p>";
+                echo "<p><strong>Địa phương:</strong> " . $row['location'] . "</p>";
+                echo "<p><strong>Địa chỉ:</strong> " . $row['address'] . "</p>";
                 echo "</div>";
             }
         } else {
-            echo "<p>H? th?ng dang c?p nh?t d? li?u l�ng ngh?...</p>";
+            echo "<p>Hệ thống đang cập nhật dữ liệu làng nghề...</p>";
         }
         ?>
     </div>
